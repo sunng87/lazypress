@@ -1,13 +1,10 @@
 # lazypress
 
-A website written in noir. 
+A website written in clojure. 
 
 ## Usage
 
-```bash
-lein deps
-lein run
-```
+TODO
 
 ## License
 
