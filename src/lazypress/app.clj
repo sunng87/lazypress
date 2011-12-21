@@ -1,11 +1,24 @@
 (ns lazypress.app
   (:use [compojure core route handler])
-  (:require [ring.utils.response :as ring]))
+  (:use [net.cgrand.enlive-html]))
 
 
-(defroute lazypress-routes
-  (GET "/" [] (ring/redirect "/index.html"))
-  (route/resources "/"))
+(deftemplate index "index.html"
+  []
+  )
+(deftemplate post "page.html"
+  [ctx]
+  [:div#page-body] (:content ctx))
+
+(defn view-index [req]
+  (index))
+(defn view-post [req]
+  )
+
+(defroutes lazypress-routes
+  (GET "/" [] view-index)
+  (GET "/v/:id" [] view-post)
+  (resources "/"))
 
 (def app
   (site lazypress-routes))
