@@ -212,15 +212,21 @@ body {background-image:url('../img/bg.png'); }
 header {text-align:center;}
 h1 {font-family: 'Lemon', cursive; font-size:3em; color:#464646; margin-bottom:5px;}
 #tm {font-family: 'Lemon', cursive; font-size:1em; color:#464646; margin-bottom:3px;}
+a.title-link:link, a.title-link:visited {color:#464646; text-decoration:none;}
+a.title-link:hover {color:#3D6615;}
 p.slogan{font-size:1em; font-style:italic; margin:2px;}
 #content-box {margin-top:10px;padding:10px;}
 #author-box {margin-top:10px;padding:10px;}
 
+#page-body {Background-color:rgba(255,255,255,0.75); font-size:1em; padding:4px;margin:10px; font-family: Helvetica, Arial, sans-serif;}
+#page-body h1{font-family: Helvetica, Arial, sans-serif;}
+
 #content {border:0; background-color:rgba(255,255,255,0.3); color:#333; font-size:1.2em; font-family:monospaced; width:100%; height:28em; padding:4px;}
+#content:hover {Background-color:rgba(255,255,255,0.5); border:1px #CCC dashed;}
 .auth-field {background-color:rgba(255,255,255,0.3); border:0; color:#333; font-size:1.2em; width:34.5%; padding:2px; font-family:'Lemon', cursive;}
 button.bigbutton {width:14%; font-family:'Lemon', sans-serif; background-color:rgba(36,36,36,0.8); color:#FFF; border-radius:2px; border:0;padding:3px; font-size:1.2em;}
 button.bigbutton:hover {background-color:rgba(36,36,36,1.0);}
-footer {text-align:center; font-size:0.75em; border-top:1px #CCC solid; padding-top:2px; color:#333;}
+footer {text-align:center; font-size:0.7em; border-top:1px #CCC solid; padding-top:2px; color:#333;}
 
 
 

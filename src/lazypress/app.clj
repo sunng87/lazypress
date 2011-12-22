@@ -1,35 +1,56 @@
 (ns lazypress.app
-  (:use [lazypress vmc])
+  (:use [lazypress vmc utils])
   (:use [compojure core route handler])
   (:use [net.cgrand.enlive-html])
-  (:require [somnium.congomongo :as mongo]))
+  (:use [somnium.congomongo])
+  (:use [ring.util.response])
+  (:use [clj-markdown.core]))
 
 (declare db-conn)
 
 (deftemplate index "index.html"
   []
   )
-(deftemplate post "page.html"
+(deftemplate page "page.html"
   [ctx]
-  [:div#page-body] (:content ctx))
+  [:div#page-body] (html-content (:content ctx)))
 
 (defn view-index [req]
   (index))
+
 (defn view-post [req]
-  )
+  (let [id (-> req :params :id)
+        page-obj (with-mongo db-conn
+                   (fetch-one :pages :where {:id id}))]
+    (page (assoc page-obj :content (md->html (:content page-obj))))))
+
+(defn save-post [req]
+  (let [content (-> req :params :content)
+        id-obj (with-mongo db-conn
+                 (fetch-and-modify :counter
+                                   {:name "post-key"}
+                                   {:$inc {:counter 1}}))
+        id (base62 (long (:counter id-obj)))]
+    (with-mongo db-conn
+      (insert! :pages {:content content :id id}))
+    (json-response {:result "ok" :id id} nil)))
 
 (defroutes lazypress-routes
   (GET "/" [] view-index)
   (GET "/v/:id" [] view-post)
+  (POST "/save" [] save-post)
   (resources "/"))
 
 (defn app-init []
-  (def db-conn (mongo/make-connection
+  (def db-conn (make-connection
                 (or (mongo-config "db") "lazypress")
                 :host (or (mongo-config "hostname") "localhost")
                 :port (or (mongo-config "port") 27017)
                 :username (or (mongo-config "username") "")
-                :password (or (mongo-config "password") ""))))
+                :password (or (mongo-config "password") "")))
+  (with-mongo db-conn
+    (update! :counter {:name "post-key"}
+             {:$inc {:counter 1}} :upsert? true)))
 
 (def app
   (site lazypress-routes))
