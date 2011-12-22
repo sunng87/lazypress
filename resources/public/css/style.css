@@ -211,6 +211,7 @@ body {background-image:url('../img/bg.png'); }
 #wrapper {width:980px; margin:auto;}
 header {text-align:center;}
 h1 {font-family: 'Lemon', cursive; font-size:3em; color:#464646; margin-bottom:5px;}
+#tm {font-family: 'Lemon', cursive; font-size:1em; color:#464646; margin-bottom:3px;}
 p.slogan{font-size:1em; font-style:italic; margin:2px;}
 #content-box {margin-top:10px;padding:10px;}
 #author-box {margin-top:10px;padding:10px;}
