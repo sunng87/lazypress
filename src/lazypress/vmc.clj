@@ -11,5 +11,5 @@
           (get "mongodb-1.8")
           first
           (get "credentials")
-          (get "hostname")))))
+          (get key)))))
 
