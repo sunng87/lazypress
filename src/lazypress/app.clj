@@ -35,10 +35,15 @@
       (insert! :pages {:content content :id id}))
     (json-response {:result "ok" :id id} nil)))
 
+(defn preview-post [req]
+  (let [content (-> req :params :content)]
+    (md->html content)))
+
 (defroutes lazypress-routes
   (GET "/" [] view-index)
   (GET "/v/:id" [] view-post)
   (POST "/save" [] save-post)
+  (POST "/preview" [] preview-post)
   (resources "/"))
 
 (defn app-init []

@@ -38,12 +38,14 @@
         <div id="content-box">
           <textarea id="content" placeholder="Your markdown content here."></textarea>
         </div>
+        <div id="preview-box" class="hidden"></div>
 
         <div id="author-box">
           <input type="text" placeholder="ID (Optional)"
           id="author" name="author" class="auth-field" />
           <input type="password" placeholder="Password (Optional)" id="password" name="password" class="auth-field" />
-          <button class="bigbutton">Preview</button>
+          <button id="preview-button" class="bigbutton"
+            onclick="lazypress.preview();">Preview</button>
           <button id="publish-button" class="bigbutton"
             onclick="lazypress.publish();">Publish</button>
         </div>
