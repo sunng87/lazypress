@@ -13,7 +13,8 @@
   )
 (deftemplate page "page.html"
   [ctx]
-  [:div#page-body] (html-content (:content ctx)))
+  [:div#page-body] (html-content (:content ctx))
+  [:title] (content (:title ctx)))
 
 (defn view-index [req]
   (index))
@@ -26,13 +27,14 @@
 
 (defn save-post [req]
   (let [content (-> req :params :content)
+        title (-> req :params :title)
         id-obj (with-mongo db-conn
                  (fetch-and-modify :counter
                                    {:name "post-key"}
                                    {:$inc {:counter 1}}))
         id (base62 (long (:counter id-obj)))]
     (with-mongo db-conn
-      (insert! :pages {:content content :id id}))
+      (insert! :pages {:content content :id id :title title}))
     (json-response {:result "ok" :id id} nil)))
 
 (defn preview-post [req]

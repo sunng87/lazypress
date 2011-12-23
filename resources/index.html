@@ -36,6 +36,8 @@
       <div role="main">
        
         <div id="content-box">
+          <div><input type="text" id="title" name="title"
+          placeholder="Your title here." /></div>
           <textarea id="content" placeholder="Your markdown content here."></textarea>
         </div>
         <div id="preview-box" class="hidden"></div>
@@ -44,10 +46,8 @@
           <input type="text" placeholder="ID (Optional)"
           id="author" name="author" class="auth-field" />
           <input type="password" placeholder="Password (Optional)" id="password" name="password" class="auth-field" />
-          <button id="preview-button" class="bigbutton"
-            onclick="lazypress.preview();">Preview</button>
-          <button id="publish-button" class="bigbutton"
-            onclick="lazypress.publish();">Publish</button>
+          <button id="preview-button" class="bigbutton">Preview</button>
+          <button id="publish-button" class="bigbutton">Publish</button>
         </div>
       </div>
       <footer>
@@ -57,8 +57,11 @@
 
 
     <!-- scripts concatenated and minified via build script -->
-    <script defer src="js/lib/mootools.js"></script>
-    <script defer src="js/script.js"></script>
+    <script src="js/lib/mootools.js"></script>
+    <script src="js/script.js"></script>
+    <script type="text/javascript">
+      window.addEvent('domready', lazypress.init);
+    </script>
     <!-- end scripts -->
 
 
