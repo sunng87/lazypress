@@ -48,6 +48,10 @@
                 :port (or (mongo-config "port") 27017)
                 :username (or (mongo-config "username") "")
                 :password (or (mongo-config "password") "")))
+  (when-not (nil? (mongo-config "username"))
+    (authenticate db-conn
+                  (mongo-config "username")
+                  (mongo-config "password")))
   (with-mongo db-conn
     (update! :counter {:name "post-key"}
              {:$inc {:counter 1}} :upsert? true)))
