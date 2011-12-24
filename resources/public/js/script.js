@@ -1,6 +1,11 @@
 lazypress = {};
 
 lazypress.publish = function() {
+  if($('content').get('value') == '') {
+    lazypress.roar.alert('Ops!', 'Write something, please.');
+    return;
+  }
+
   $('publish-button').removeEvents('click');
   $('publish-button').set('text', 'Publishing ...');
   if ($('author').get('value') != '') {
