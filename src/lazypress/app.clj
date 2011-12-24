@@ -5,6 +5,8 @@
   (:use [somnium.congomongo])
   (:use [ring.util.response])
   (:use [clj-markdown.core])
+  (:use [clojure.string :only [blank? lower-case]])
+  (:import [java.util Date])
   (:import [org.apache.commons.codec.digest DigestUtils]))
 
 (declare db-conn)
@@ -15,7 +17,12 @@
 (deftemplate page "page.html"
   [ctx]
   [:div#page-body] (html-content (:content ctx))
-  [:title] (content (:title ctx)))
+  [:span#author] (content (if-not (blank? (:author ctx))
+                            (:author ctx) "anonymous"))
+  [:span#pubdate] (content (.toString (:date ctx)))
+  [:span#title] (content (if-not (blank? (:title ctx))
+                           (:title ctx) "untitled"))
+  [:title] (content (str (:title ctx)) " - LazyPress"))
 
 (defn view-index [req]
   (index))
@@ -35,9 +42,13 @@
                                    {:$inc {:counter 1}}))
         id (base62 (long (:counter id-obj)))
         page {:content content :id id :title title
-              :author uid}]
-    (with-mongo db-conn (insert! :pages page))
-    (json-response {:result "ok" :id id} nil)))
+              :author uid :date (Date.)}]
+    (if (or (blank? uid) (= uid (-> req :session :author)))
+      (do
+        (with-mongo db-conn (insert! :pages page))
+        (json-response {:result "ok" :id id} nil))
+      (do
+        (json-response {:result "failed"} nil)))))
 
 (defn preview-post [req]
   (let [content (-> req :params :content)]
@@ -47,11 +58,13 @@
   (let [{user :author passwd :password} (:params req)
         epasswd (DigestUtils/sha256Hex passwd)
         user-obj (with-mongo db-conn
-                   (fetch-one :authors :where {:id user}))]
+                   (fetch-one :authors :where {:id (lower-case user)}))]
     (if (nil? user-obj)
       (do
         (with-mongo db-conn
-          (insert! :authors {:id user :passwd epasswd}))
+          (insert! :authors {:id (lower-case user)
+                             :passwd epasswd
+                             :display user}))
         (assoc (json-response {:result "ok" :id user} nil)
           :session {:author user}))
       (do

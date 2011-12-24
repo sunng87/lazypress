@@ -4,6 +4,11 @@ lazypress.publish = function() {
   $('publish-button').removeEvents('click');
   $('publish-button').set('text', 'Publishing ...');
   if ($('author').get('value') != '') {
+    if (!$('author').checkValidity()) {
+      lazypress.roar.alert('Invalid User ID',
+                          'Make your ID with 0-9 a-z A-Z - _');
+      return;
+    }
     var author = $('author').get('value');
     var passwd = $('password').get('value');
     var req = new Request.JSON(
@@ -30,13 +35,18 @@ lazypress._publish = function() {
 
   var content = $('content').get('value');
   var title = $('title').get('value');
+  var author = $('author').get('value');
   var req = new Request.JSON(
     {url: "/save", 
      onSuccess: function(r,_){
-       var id = r.id;
-       window.location = "/v/"+id;
+       if (r.result == 'ok'){
+         var id = r.id;
+         window.location = "/v/"+id;
+       } else {
+         lazypress.roar.alert('Failed', 'Unknown error');
+       }
      }});
-  req.post({'content': content, 'title': title});
+  req.post({'content': content, 'title': title, 'author': author});
 };
 
 lazypress.preview = function() {

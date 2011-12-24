@@ -220,6 +220,10 @@ p.slogan{font-size:1em; font-style:italic; margin:2px;}
 #author-box {margin-top:10px;padding:10px;}
 
 #page-body {background-color:rgba(255,255,255,0.75); font-size:1em; padding:10px;margin:10px; font-family: Helvetica, Arial, sans-serif; border-radius:5px;}
+#page-info {font-size:0.8em;}
+span#title {font-size:1em; font-weight:bold;}
+span#author {font-size:0.9em;}
+span#pubdate {font-size:0.9em;}
 
 #title {border:0; background-color:rgba(255,255,255,0.3); color:#333; font-size:1.2em; font-weight:bold;width:100%; padding:5px; margin-bottom:5px;}
 #title:hover {background-color:rgba(255,255,255,0.5);}
