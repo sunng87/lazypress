@@ -23,9 +23,9 @@ var Roar = new Class({
 		margin: {x: 10, y: 10},
 		offset: 10,
 		className: 'roar',
-		onShow: $empty,
-		onHide: $empty,
-		onRender: $empty
+		onShow: Function.from(),
+		onHide: Function.from(),
+		onRender: Function.from()
 	},
 
 	initialize: function(options) {
@@ -35,8 +35,8 @@ var Roar = new Class({
 	},
 
 	alert: function(title, message, options) {
-		var params = Array.link(arguments, {title: String.type, message: String.type, options: Object.type});
-		var items = [new Element('h3', {'html': $pick(params.title, '')})];
+		var params = Array.link(arguments, {title: Type.isString, message: Type.isString, options: Type.isObject});
+		var items = [new Element('h3', {'html': Array.pick([params.title, ''])})];
 		if (params.message) items.push(new Element('p', {'html': params.message}));
 		return this.inject(items, params.options);
 	},
@@ -65,18 +65,14 @@ var Roar = new Class({
 			elements
 		);
 
-		item.setStyle(this.align.x, 0).store('roar:offset', offset[1]).set('morph', $merge({
+		item.setStyle(this.align.x, 0).store('roar:offset', offset[1]).set('morph', Object.merge({
 			unit: 'px',
 			link: 'cancel',
 			onStart: Chain.prototype.clearChain,
 			transition: Fx.Transitions.Back.easeOut
 		}, this.options.itemFx));
 
-		var remove = this.remove.create({
-			bind: this,
-			arguments: [item],
-			delay: 10
-		});
+		var remove = this.remove.bind(this, item);
 		this.items.push(item.addEvent('click', remove));
 
 		if (this.options.duration) {
@@ -117,7 +113,7 @@ var Roar = new Class({
 
 	render: function() {
 		this.position = this.options.position;
-		if ($type(this.position) == 'string') {
+		if (typeOf(this.position) == 'string') {
 			var position = {x: 'center', y: 'center'};
 			this.align = {x: 'left', y: 'top'};
 			if ((/left|west/i).test(this.position)) position.x = 'left';
@@ -127,11 +123,11 @@ var Roar = new Class({
 			this.position = position;
 		}
 		this.body = new Element('div', {'class': 'roar-body'}).inject(document.body);
-		if (Browser.Engine.trident4) this.body.addClass('roar-body-ugly');
+		if (Browser.ie) this.body.addClass('roar-body-ugly');
 		this.moveTo = this.body.setStyles.bind(this.body);
 		this.reposition();
 		if (this.options.bodyFx) {
-			var morph = new Fx.Morph(this.body, $merge({
+			var morph = new Fx.Morph(this.body, Object.merge({
 				unit: 'px',
 				chain: 'cancel',
 				transition: Fx.Transitions.Circ.easeOut
@@ -152,7 +148,7 @@ var Roar = new Class({
 		max.right += scroll.x;
 		max.top += scroll.y;
 		max.bottom += scroll.y;
-		var rel = ($type(this.container) == 'element') ? this.container.getCoordinates() : max;
+		var rel = (typeOf(this.container) == 'element') ? this.container.getCoordinates() : max;
 		this.moveTo({
 			left: (this.position.x == 'right')
 				? (Math.min(rel.right, max.right) - margin.x)

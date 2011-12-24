@@ -68,6 +68,6 @@ lazypress.edit = function(e) {
 lazypress.init = function( ) {
   $('preview-button').addEvent('click', lazypress.preview);
   $('publish-button').addEvent('click', lazypress.publish);
-  lazypress.roar = new Roar();
+  lazypress.roar = new Roar({duration: 5000});
 };
 
