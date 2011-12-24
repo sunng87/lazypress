@@ -75,7 +75,7 @@
 
 (defroutes lazypress-routes
   (GET "/" [] view-index)
-  (GET "/v/:id" [] view-post)
+  (GET "/p/:id" [] view-post)
   (POST "/login" [] login)
   (POST "/save" [] save-post)
   (POST "/preview" [] preview-post)

@@ -48,7 +48,7 @@ lazypress._publish = function() {
      onSuccess: function(r,_){
        if (r.result == 'ok'){
          var id = r.id;
-         window.location = "/v/"+id;
+         window.location = "/p/"+id;
        } else {
          lazypress.roar.alert('Failed', 'Unknown error');
        }
