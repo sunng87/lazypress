@@ -7,6 +7,8 @@ lazypress.publish = function() {
     if (!$('author').checkValidity()) {
       lazypress.roar.alert('Invalid User ID',
                           'Make your ID with 0-9 a-z A-Z - _');
+      $('publish-button').set('text', 'Publish');
+      $('publish-button').addEvent('click', lazypress.publish);
       return;
     }
     var author = $('author').get('value');
