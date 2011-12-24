@@ -4,7 +4,8 @@
   (:use [net.cgrand.enlive-html])
   (:use [somnium.congomongo])
   (:use [ring.util.response])
-  (:use [clj-markdown.core]))
+  (:use [clj-markdown.core])
+  (:import [org.apache.commons.codec.digest DigestUtils]))
 
 (declare db-conn)
 
@@ -26,24 +27,43 @@
     (page (assoc page-obj :content (md->html (:content page-obj))))))
 
 (defn save-post [req]
-  (let [content (-> req :params :content)
-        title (-> req :params :title)
+  (let [{content :content title :title
+         uid :author} (:params req)
         id-obj (with-mongo db-conn
                  (fetch-and-modify :counter
                                    {:name "post-key"}
                                    {:$inc {:counter 1}}))
-        id (base62 (long (:counter id-obj)))]
-    (with-mongo db-conn
-      (insert! :pages {:content content :id id :title title}))
+        id (base62 (long (:counter id-obj)))
+        page {:content content :id id :title title
+              :author uid}]
+    (with-mongo db-conn (insert! :pages page))
     (json-response {:result "ok" :id id} nil)))
 
 (defn preview-post [req]
   (let [content (-> req :params :content)]
     (md->html content)))
 
+(defn login [req]
+  (let [{user :author passwd :password} (:params req)
+        epasswd (DigestUtils/sha256Hex passwd)
+        user-obj (with-mongo db-conn
+                   (fetch-one :authors :where {:id user}))]
+    (if (nil? user-obj)
+      (do
+        (with-mongo db-conn
+          (insert! :authors {:id user :passwd epasswd}))
+        (assoc (json-response {:result "ok" :id user} nil)
+          :session {:author user}))
+      (do
+        (if (= epasswd (:passwd user-obj))
+          (assoc (json-response {:result "ok" :id user} nil)
+            :session {:author user})
+          (json-response {:result "failed"} nil))))))
+
 (defroutes lazypress-routes
   (GET "/" [] view-index)
   (GET "/v/:id" [] view-post)
+  (POST "/login" [] login)
   (POST "/save" [] save-post)
   (POST "/preview" [] preview-post)
   (resources "/"))

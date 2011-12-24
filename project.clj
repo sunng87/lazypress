@@ -5,7 +5,8 @@
                            [org.clojure/data.json "0.1.1"]
                            [clj-markdown "0.1.0"]
                            [congomongo "0.1.7"]
-                           [enlive "1.0.0"]]
+                           [enlive "1.0.0"]
+                           [commons-codec "1.6"]]
             :dev-dependencies [[lein-ring "0.5.2"]]
             :ring {:handler lazypress.app/app
                    :init lazypress.app/app-init})

@@ -3,6 +3,31 @@ lazypress = {};
 lazypress.publish = function() {
   $('publish-button').removeEvents('click');
   $('publish-button').set('text', 'Publishing ...');
+  if ($('author').get('value') != '') {
+    var author = $('author').get('value');
+    var passwd = $('password').get('value');
+    var req = new Request.JSON(
+      {url: '/login',
+       onSuccess: function(r,_){
+         if (r.result == 'ok') {
+           lazypress._publish();
+         } else {
+           lazypress.roar.alert('Login Failed.',
+             'Your ID is captured. Or the password you typed is invalid.');
+           $('publish-button').set('text', 'Publish');
+           $('publish-button').addEvent('click', lazypress.publish);
+         }
+         
+       }}
+    );
+    req.post({'author': author, 'password': passwd});
+  } else {
+    lazypress._publish();
+  }
+};
+
+lazypress._publish = function() {
+
   var content = $('content').get('value');
   var title = $('title').get('value');
   var req = new Request.JSON(
@@ -43,5 +68,6 @@ lazypress.edit = function(e) {
 lazypress.init = function( ) {
   $('preview-button').addEvent('click', lazypress.preview);
   $('publish-button').addEvent('click', lazypress.publish);
+  lazypress.roar = new Roar();
 };
 
