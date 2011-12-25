@@ -22,7 +22,7 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
     <link href='http://fonts.googleapis.com/css?family=Lemon' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/css/style.css">
-    
+    <link rel="stylesheet" href="/css/Roar.css">    
     <!-- More ideas for your <head> here: h5bp.com/d/head-Tips -->
 
   </head>
@@ -34,7 +34,7 @@
         <div>
           <div id="page-info">
             <span id="title"></span> | 
-            author: <span id="author"></span> |
+            author: <span id="author_display"></span> |
             pub date: <span id="pubdate"></span>
           </div>
         </div>
@@ -43,6 +43,15 @@
       <div role="main" id="page-body">
         
       </div>
+      <div id="author-box">
+        <input type="hidden" id="id" name="id" value="" />
+        <input type="text" placeholder="Author ID"
+        pattern="[a-zA-Z0-9-_]*"  id="author" name="author"
+        class="auth-field" value="" />
+        <input type="password" placeholder="Password" id="password" name="password" class="auth-field" />
+        <button id="edit-button" class="bigbutton">Edit</button>
+        <button id="delete-button" class="bigbutton">Delete</button>
+      </div>
       <footer>
         &copy; Sun Ning. Built by Clojure.
       </footer>
@@ -50,8 +59,13 @@
 
 
     <!-- scripts concatenated and minified via build script -->
-    <script defer src="/js/lib/mootools.js"></script>
-    <script defer src="/js/script.js"></script>
+    <script src="/js/lib/mootools.js"></script>
+    <script src="/js/lib/Roar.js"></script>
+    <script src="/js/script.js"></script>
+    <script type="text/javascript">
+      window.addEvent('domready', lazypress.init);
+    </script>
+
     <!-- end scripts -->
 
 

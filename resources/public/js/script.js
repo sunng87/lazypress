@@ -8,7 +8,7 @@ lazypress.publish = function() {
 
   $('publish-button').removeEvents('click');
   $('publish-button').set('text', 'Publishing ...');
-  if ($('author').get('value') != '') {
+  if ($('password') && $('author').get('value') != '') {
     if (!$('author').checkValidity()) {
       lazypress.roar.alert('Invalid User ID',
                           'Make your ID with 0-9 a-z A-Z - _');
@@ -39,10 +39,13 @@ lazypress.publish = function() {
 };
 
 lazypress._publish = function() {
-
   var content = $('content').get('value');
   var title = $('title').get('value');
   var author = $('author').get('value');
+  var data = {'content':content, 'title':title, 'author':author};
+  if ($('id')) {
+    data['id'] = $('id').get('value');
+  }
   var req = new Request.JSON(
     {url: "/save", 
      onSuccess: function(r,_){
@@ -53,7 +56,7 @@ lazypress._publish = function() {
          lazypress.roar.alert('Failed', 'Unknown error');
        }
      }});
-  req.post({'content': content, 'title': title, 'author': author});
+  req.post(data);
 };
 
 lazypress.preview = function() {
@@ -61,10 +64,9 @@ lazypress.preview = function() {
   $('preview-button').set('text', 'Rendering ...');
   var content = $('content').get('value');
   var req = new Request.HTML(
-    {url: "preview",
-     onSuccess: function(_,r,_,_){
-       $('preview-box').empty();
-       r.inject($('preview-box'));
+    {url: "/preview",
+     onSuccess: function(_,_,r,_){
+       $('preview-box').set('html', r);
        $('content-box').toggleClass('hidden');
        $('preview-box').toggleClass('hidden');
        $('preview-button').set('text', 'Edit');
@@ -82,9 +84,81 @@ lazypress.edit = function(e) {
 
 };
 
+lazypress.pedit = function() {
+  $('edit-button').removeEvents('click');
+  $('edit-button').set('text', 'Loading ...');
+  var author = $('author').get('value');
+  var passwd = $('password').get('value');
+  var req = new Request.JSON(
+    {url: '/login',
+     onSuccess: function(r,_){
+       if (r.result == 'ok') {
+         window.location = "/e/" + $('id').get('value');
+       } else {
+         lazypress.roar.alert('Login Failed.',
+           'Your ID is captured. Or the password you typed is invalid.');
+         $('edit-button').set('text', 'Edit');
+         $('edit-button').addEvent('click', lazypress.pedit);
+       }
+       
+     }}
+  );
+  req.post({'author': author, 'password': passwd});
+};
+
+lazypress.delete = function() {
+  $('delete-button').removeEvents('click');
+  $('delete-button').set('text', 'Loading ...');
+  var author = $('author').get('value');
+  var passwd = $('password').get('value');
+  var req = new Request.JSON(
+    {url: '/login',
+     onSuccess: function(r,_){
+       if (r.result == 'ok') {
+         lazypress._delete();
+       } else {
+         lazypress.roar.alert('Login Failed.',
+           'Your ID is captured. Or the password you typed is invalid.');
+         $('delete-button').set('text', 'Delete');
+         $('delete-button').addEvent('click', lazypress.delete);
+       }
+       
+     }}
+  );
+  req.post({'author': author, 'password': passwd});
+};
+
+lazypress._delete = function() {
+  var id = $('id').get('value');
+  var req = new Request.JSON(
+    {url: '/d/'+id,
+     onSuccess: function(r,_) {
+       if(r.result == 'ok'){
+         lazypress.roar.alert('Article Deleted',
+                             'This article has been deleted permanently.')
+         $('delete-button').set('text', 'Deleted');
+       } else {
+         lazypress.roar.alert('Unknown error.', 'Article not removed.');
+       }
+     }}
+  );
+  req.post();
+};
+
 lazypress.init = function( ) {
-  $('preview-button').addEvent('click', lazypress.preview);
-  $('publish-button').addEvent('click', lazypress.publish);
+  if ($('preview-button')) {
+    $('preview-button').addEvent('click', lazypress.preview);
+  }
+  if ($('publish-button')) {
+    $('publish-button').addEvent('click', lazypress.publish);
+  }
+  if ($('edit-button')) {
+    $('edit-button').addEvent('click', lazypress.pedit);
+  }
+  if ($('delete-button')) {
+    $('delete-button').addEvent('click', lazypress.delete);
+  }
+
   lazypress.roar = new Roar({duration: 5000});
 };
 
