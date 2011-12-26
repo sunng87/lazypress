@@ -4,7 +4,6 @@
   (:use [net.cgrand.enlive-html])
   (:use [somnium.congomongo])
   (:use [ring.util.response])
-  (:use [clj-markdown.core])
   (:use [clojure.string :only [blank? lower-case]])
   (:import [java.util Date])
   (:import [org.apache.commons.codec.digest DigestUtils]))
