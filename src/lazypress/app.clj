@@ -33,6 +33,19 @@
   [:input#title] (set-attr :value (:title ctx))
   [:title] (content (:title ctx) " - LazyPress"))
 
+
+(defsnippet article-model "author.html"
+  [:.article-item]
+  [ctx]
+  [:a.article-link] (do-> (content (:title ctx))
+                          (set-attr :href (str "/p/" (:id ctx))))
+  [:span.article-date] (content (.toString (:date ctx))))
+
+(deftemplate author "author.html"
+  [ctx]
+  [:h2#author-name] (content (:author ctx))
+  [:ul#article-list] (content (map article-model (:pages ctx))))
+
 (defn view-index [req]
   (index))
 
@@ -115,9 +128,19 @@
               :session {:author user})
             (json-response {:result "failed"} nil)))))))
 
+(defn view-author [req]
+  (let [uid (-> req :params :id)
+        pages (with-mongo db-conn
+                (fetch :pages
+                       :where {:author uid}
+                       :only [:id :title :date]
+                       :sort {:date -1}))]
+    (author {:author uid :pages pages})))
+
 (defroutes lazypress-routes
   (GET "/" [] view-index)
   (GET "/p/:id" [] view-post)
+  (GET "/a/:id" [] view-author)
   (GET "/e/:id" [] edit-post)
   (POST "/d/:id" [] delete-post)
   (POST "/login" [] login)

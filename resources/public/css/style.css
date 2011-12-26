@@ -234,7 +234,11 @@ button.bigbutton {width:14%; background-color:rgba(36,36,36,0.8); color:#FFF; bo
 button.bigbutton:hover {background-color:rgba(36,36,36,1.0);}
 footer {text-align:center; font-size:0.7em; border-top:1px #CCC solid; padding-top:2px; color:#333;}
 
-
+h2#author-name {font-size:1.8em; font-weight:bold;}
+li.article-item {line-height:175%;}
+a.article-link:link, a.article-link:visited {color: #333; text-decoration:none; background-color:rgba(255,255,255,0.6);padding:4px;}
+a.article-link:hover {background-color:rgba(255,255,255,0.8); color:#3D6615;}
+span.article-date {font-size:0.7em;}
 
 
 
