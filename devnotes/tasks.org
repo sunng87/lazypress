@@ -1,10 +1,9 @@
-* LazyPress Roadmap
+* LazyPress Tasks
 
 ** Application
 
 *** TODO Remove counter update on app-init, need a better solution
-*** TODO Author index page
-*** TODO GFM via jruby ??
+*** DONE Author index page
 
 ** UI
 

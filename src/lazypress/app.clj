@@ -16,8 +16,13 @@
 (deftemplate page "page.html"
   [ctx]
   [:div#page-body] (html-content (:content ctx))
-  [:span#author_display] (content (if-not (blank? (:author ctx))
-                            (:author ctx) "anonymous"))
+  [:a#author-display] (do->
+                          (content (if-not (blank? (:author ctx))
+                                     (:author ctx) "anonymous"))
+                          (set-attr :href
+                                    (if-not (blank? (:author ctx))
+                                      (str "/a/" (:author ctx))
+                                      "#")))
   [:span#pubdate] (content (.toString (:date ctx)))
   [:span#title] (content (if-not (blank? (:title ctx))
                            (:title ctx) "untitled"))
@@ -71,9 +76,10 @@
          uid :author rid :id} (:params req)
         id (article-id rid)
         page {:content content :id id :title title
-              :author uid :date (Date.)}]
+              :author uid :date (Date.)}
+        session-author (-> req :session :author)]
     (if (blank? rid)
-      (if (or (blank? uid) (= uid (-> req :session :author)))
+      (if (or (blank? uid) (= uid session-author))
         (do
           (with-mongo db-conn (insert! :pages page))
           (json-response {:result "ok" :id id} nil))
@@ -81,7 +87,7 @@
           (json-response {:result "failed"} nil)))
       (do
         (with-mongo db-conn
-          (update! :pages {:id rid} page))
+          (update! :pages {:id rid :author session-author} page))
         (json-response {:result "ok" :id rid})))))
 
 (defn preview-post [req]
