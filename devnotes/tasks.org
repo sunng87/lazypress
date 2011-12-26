@@ -1,0 +1,19 @@
+* LazyPress Roadmap
+
+** Application
+
+*** TODO Remove counter update on app-init, need a better solution
+*** TODO Author index page
+*** TODO GFM via jruby ??
+
+** UI
+
+*** TODO A more detailed footer.
+*** TODO More tips to guide user how to use lazypress
+*** TODO A better stylesheet for article
+
+** Development
+
+*** TODO Enable hot reload of enlive templates
+
+
