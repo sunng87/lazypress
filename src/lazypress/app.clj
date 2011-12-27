@@ -28,7 +28,8 @@
                            (:title ctx) "untitled"))
   [:title] (content (:title ctx) " - LazyPress")
   [:input#id] (set-attr :value (:id ctx))
-  [:input#author] (set-attr :value (:author ctx)))
+  [:input#author] (set-attr :value (:author ctx))
+  [:div#author-box] (if (blank? (:author ctx)) (html-content "") identity))
 
 (deftemplate edit "edit.html"
   [ctx]
