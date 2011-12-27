@@ -51,8 +51,8 @@ body, button, input, select, textarea { font-family: sans-serif; color: #222; }
 Links
 ========================================================================== */
 
-a { color: #00e; }
-a:visited { color: #551a8b; }
+a:link { color: #464646; }
+a:visited { color: #464646; }
 a:hover { color: #06e; }
 a:focus { outline: thin dotted; }
 
@@ -221,7 +221,7 @@ p.slogan{font-size:1em; font-style:italic; margin:2px;}
 #author-box {margin-top:10px;padding:10px; text-align:right;}
 
 #page-body {background-color:rgba(255,255,255,0.75); font-size:1em; padding:10px;margin:10px; font-family: Helvetica, Arial, sans-serif; border-radius:5px;}
-#page-info {font-size:0.8em;}
+#page-info {font-size:0.8em; text-align:left;}
 span#title {font-size:1.1em; font-weight:bold;}
 span#author {font-size:0.9em;}
 span#pubdate {font-size:0.9em;}
@@ -233,7 +233,7 @@ span#pubdate {font-size:0.9em;}
 .auth-field {background-color:rgba(255,255,255,0.3); border:0; color:#333; font-size:1em; width:34%; padding:2px; font-weight:bold;}
 button.bigbutton {width:14%; background-color:rgba(36,36,36,0.8); color:#FFF; border-radius:2px; border:0;padding:3px; font-size:1em;font-weight:bold;}
 button.bigbutton:hover {background-color:rgba(36,36,36,1.0);}
-footer {text-align:center; font-size:0.7em; border-top:1px #CCC solid; padding-top:2px; color:#333;}
+footer {text-align:left; font-size:0.7em; border-top:1px #CCC solid; padding:5px; color:#333;}
 
 h2#author-name {font-size:1.8em; font-weight:bold;}
 li.article-item {line-height:175%;}
