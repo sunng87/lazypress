@@ -3,8 +3,9 @@
   (:use [clojure.string :only [blank?]]))
 
 (deftemplate index "index.html"
-  []
-  )
+  [ctx]
+  [:span#user] (content (:author ctx)))
+
 (deftemplate page "page.html"
   [ctx]
   [:div#page-body] (html-content (:content ctx))
@@ -21,7 +22,7 @@
   [:title] (content (:title ctx) " - LazyPress")
   [:input#id] (set-attr :value (:id ctx))
   [:input#author] (set-attr :value (:author ctx))
-  [:div#author-box] (if (blank? (:author ctx)) (html-content "") identity))
+  [:div#author-box] (if-not (:editable ctx) (html-content "") identity))
 
 (deftemplate edit "edit.html"
   [ctx]

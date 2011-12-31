@@ -1,48 +1,9 @@
 lazypress = {};
 
 lazypress.publish = function() {
-  if($('content').get('value') == '') {
-    lazypress.roar.alert('Ops!', 'Write something, please.');
-    return;
-  }
-
-  $('publish-button').removeEvents('click');
-  $('publish-button').set('text', 'Publishing ...');
-  if ($('password') && $('author').get('value') != '') {
-    if (!$('author').checkValidity()) {
-      lazypress.roar.alert('Invalid User ID',
-                          'Make your ID with 0-9 a-z A-Z - _');
-      $('publish-button').set('text', 'Publish');
-      $('publish-button').addEvent('click', lazypress.publish);
-      return;
-    }
-    var author = $('author').get('value');
-    var passwd = $('password').get('value');
-    var req = new Request.JSON(
-      {url: '/login',
-       onSuccess: function(r,_){
-         if (r.result == 'ok') {
-           lazypress._publish();
-         } else {
-           lazypress.roar.alert('Login Failed.',
-             'Your ID is captured. Or the password you typed is invalid.');
-           $('publish-button').set('text', 'Publish');
-           $('publish-button').addEvent('click', lazypress.publish);
-         }
-         
-       }}
-    );
-    req.post({'author': author, 'password': passwd});
-  } else {
-    lazypress._publish();
-  }
-};
-
-lazypress._publish = function() {
   var content = $('content').get('value');
   var title = $('title').get('value');
-  var author = $('author').get('value');
-  var data = {'content':content, 'title':title, 'author':author};
+  var data = {'content':content, 'title':title};
   if ($('id')) {
     data['id'] = $('id').get('value');
   }
@@ -85,50 +46,10 @@ lazypress.edit = function(e) {
 };
 
 lazypress.pedit = function() {
-  $('edit-button').removeEvents('click');
-  $('edit-button').set('text', 'Loading ...');
-  var author = $('author').get('value');
-  var passwd = $('password').get('value');
-  var req = new Request.JSON(
-    {url: '/login',
-     onSuccess: function(r,_){
-       if (r.result == 'ok') {
-         window.location = "/e/" + $('id').get('value');
-       } else {
-         lazypress.roar.alert('Login Failed.',
-           'Your ID is captured. Or the password you typed is invalid.');
-         $('edit-button').set('text', 'Edit');
-         $('edit-button').addEvent('click', lazypress.pedit);
-       }
-       
-     }}
-  );
-  req.post({'author': author, 'password': passwd});
+  window.location = "/e/" + $('id').get('value');
 };
 
 lazypress.delete = function() {
-  $('delete-button').removeEvents('click');
-  $('delete-button').set('text', 'Loading ...');
-  var author = $('author').get('value');
-  var passwd = $('password').get('value');
-  var req = new Request.JSON(
-    {url: '/login',
-     onSuccess: function(r,_){
-       if (r.result == 'ok') {
-         lazypress._delete();
-       } else {
-         lazypress.roar.alert('Login Failed.',
-           'Your ID is captured. Or the password you typed is invalid.');
-         $('delete-button').set('text', 'Delete');
-         $('delete-button').addEvent('click', lazypress.delete);
-       }
-       
-     }}
-  );
-  req.post({'author': author, 'password': passwd});
-};
-
-lazypress._delete = function() {
   var id = $('id').get('value');
   var req = new Request.JSON(
     {url: '/d/'+id,
@@ -145,6 +66,37 @@ lazypress._delete = function() {
   req.post();
 };
 
+lazypress.login = function() {
+  navigator.id.getVerifiedEmail(function(assertion) {
+    if (assertion) {
+      var req = new Request.JSON(
+        {url: '/login',
+         onSuccess: function(r,_){
+           if(r.result == 'ok') {
+             $('user').set('text', r.id)
+             lazypress.roar.alert('Login success.', 'Welcome to lazypress, '+r.id);
+           } else {
+             lazypress.roar.alert('Login failed.', 'Do you mind to try again ?');
+           }
+         }}
+      );
+      req.post({'assertion': assertion});
+    } else {
+      lazypress.roar.alert('Login failed.', 'Seems you have canceled the login process.');
+    }
+  });
+};
+
+lazypress.logout = function() {
+  var req = new Request.JSON(
+    {url: '/logout',
+     onSuccess: function(r,_) {
+       window.location = "/";
+     }}
+  );
+  req.post();
+};
+
 lazypress.init = function( ) {
   if ($('preview-button')) {
     $('preview-button').addEvent('click', lazypress.preview);
@@ -156,7 +108,18 @@ lazypress.init = function( ) {
     $('edit-button').addEvent('click', lazypress.pedit);
   }
   if ($('delete-button')) {
-    $('delete-button').addEvent('click', lazypress.delete);
+    $('delete-button').addEvent('click', function(){
+      if (window.confirm("Sure to delete this article?")){
+        lazypress.delete();
+      }
+    });
+  }
+  if ($('user')) {
+    $('user').addEvent('click', function(){
+      if(window.confirm("Logout ?")){
+        lazypress.logout();
+      }
+    })
   }
 
   lazypress.roar = new Roar({duration: 5000});

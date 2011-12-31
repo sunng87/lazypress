@@ -42,9 +42,10 @@
         <div id="preview-box" class="hidden"></div>
 
         <div id="author-box">
-          <input type="text" placeholder="ID (Optional)"
-          pattern="[a-zA-Z0-9-_]*"  id="author" name="author" class="auth-field" />
-          <input type="password" placeholder="Password (Optional)" id="password" name="password" class="auth-field" />
+          <span id="user"></span>
+          <a href="javascript:lazypress.login();" id="login"><img src="/img/sign_in_green.png"
+          alt="sign in with browser id" /></a>
+
           <button id="preview-button" class="bigbutton">Preview</button>
           <button id="publish-button" class="bigbutton">Publish</button>
         </div>
@@ -62,6 +63,7 @@
     <!-- scripts concatenated and minified via build script -->
     <script src="/js/lib/mootools.js"></script>
     <script src="/js/lib/Roar.js"></script>
+    <script src="https://browserid.org/include.js" type="text/javascript"></script>
     <script src="/js/script.js"></script>
     <script type="text/javascript">
       window.addEvent('domready', lazypress.init);

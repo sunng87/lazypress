@@ -1,16 +1,14 @@
 (ns lazypress.app
-  (:use [lazypress vmc utils views])
+  (:use [lazypress vmc utils views browserid])
   (:use [compojure core route handler])
   (:use [somnium.congomongo])
   (:use [clojure.string :only [blank? lower-case]])
-  (:import [java.util Date])
-  (:import [org.apache.commons.codec.digest DigestUtils]))
+  (:import [java.util Date]))
 
 (declare db-conn)
 
-
 (defn view-index [req]
-  (index))
+  (index {:author (-> req :session :author)}))
 
 (defn view-post [req]
   (let [id (-> req :params :id)
@@ -18,7 +16,9 @@
                    (fetch-one :pages :where {:id id}))]
     (if (nil? page-obj)
       {:status 404}
-      (page (assoc page-obj :content (md->html (:content page-obj)))))))
+      (page (assoc page-obj
+              :content (md->html (:content page-obj))
+              :editable (= (:author page-obj) (-> req :session :author)))))))
 
 (defn- article-id [id]
   (if (blank? id)
@@ -30,20 +30,16 @@
     id))
 
 (defn save-post [req]
-  (let [{content :content title :title
-         uid :author rid :id} (:params req)
+  (let [{content :content title :title rid :id} (:params req)
         id (article-id rid)
+        session-author (-> req :session :author)
         page {:content content :id id :title title
-              :author uid :date (Date.)}
-        session-author (-> req :session :author)]
+              :author session-author :date (Date.)}]
     (if (blank? rid)
-      (if (or (blank? uid) (= uid session-author))
-        (do
-          (with-mongo db-conn (insert! :pages page))
-          (json-response {:result "ok" :id id} nil))
-        (do
-          (json-response {:result "failed"} nil)))
       (do
+        (with-mongo db-conn (insert! :pages page))
+        (json-response {:result "ok" :id id} nil))
+      (do        
         (with-mongo db-conn
           (update! :pages {:id rid :author session-author} page))
         (json-response {:result "ok" :id rid})))))
@@ -72,25 +68,24 @@
         (json-response {:result "failed"})))))
 
 (defn login [req]
-  (if (blank? (-> req :params :author))
-    (json-response {:result "failed"})
-    (let [{user :author passwd :password} (:params req)
-          epasswd (DigestUtils/sha256Hex passwd)
-          user-obj (with-mongo db-conn
-                     (fetch-one :authors :where {:id (lower-case user)}))]
-      (if (nil? user-obj)
-        (do
+  (let [assertion (-> req :params :assertion)
+        result (verify assertion)]
+    (if (= "okay" (:status result))
+      (do
+        (when (nil? (with-mongo db-conn
+                      (fetch-one :authors :where {:id (:email result)})))
           (with-mongo db-conn
-            (insert! :authors {:id (lower-case user)
-                               :passwd epasswd
-                               :display user}))
-          (assoc (json-response {:result "ok" :id user} nil)
-            :session {:author user}))
-        (do
-          (if (= epasswd (:passwd user-obj))
-            (assoc (json-response {:result "ok" :id user} nil)
-              :session {:author user})
-            (json-response {:result "failed"} nil)))))))
+            (insert! :authors {:id (:email result)})))
+        (assoc
+          (json-response {:result "ok" :id (:email result)})
+          :session {:author (:email result)}))
+      (do
+        (json-response {:result "failed"})))))
+
+(defn logout [req]
+  (assoc
+      (json-response {:result "ok"})
+    :session {:author nil}))
 
 (defn view-author [req]
   (let [uid (-> req :params :id)
@@ -108,6 +103,7 @@
   (GET "/e/:id" [] edit-post)
   (POST "/d/:id" [] delete-post)
   (POST "/login" [] login)
+  (POST "/logout" [] logout)
   (POST "/save" [] save-post)
   (POST "/preview" [] preview-post)
   (resources "/"))

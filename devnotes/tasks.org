@@ -4,10 +4,11 @@
 
 *** TODO Remove counter update on app-init, need a better solution
 *** DONE Author index page
+*** TODO Authentication with Browser ID
 
 ** UI
 
-*** TODO A more detailed footer.
+*** DONE A more detailed footer.
 *** TODO More tips to guide user how to use lazypress
 *** TODO A better stylesheet for article
 

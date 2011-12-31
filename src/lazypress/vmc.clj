@@ -13,3 +13,6 @@
           (get "credentials")
           (get key)))))
 
+(defn vmc? []
+  (not (nil? (get-env "VCAP_SERVICES"))))
+

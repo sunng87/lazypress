@@ -37,6 +37,7 @@
           <span id="title"></span> | 
           author: <a id="author-display" class="article-link"></a> |
           pub date: <span id="pubdate"></span>
+          <input type="hidden" value="" id="id" />
         </div>
         
         
@@ -45,11 +46,6 @@
         
       </div>
       <div id="author-box">
-        <input type="hidden" id="id" name="id" value="" />
-        <input type="text" placeholder="Author ID"
-        pattern="[a-zA-Z0-9-_]*"  id="author" name="author"
-        class="auth-field" value="" readonly />
-        <input type="password" placeholder="Password" id="password" name="password" class="auth-field" />
         <button id="edit-button" class="bigbutton">Edit</button>
         <button id="delete-button" class="bigbutton">Delete</button>
       </div>

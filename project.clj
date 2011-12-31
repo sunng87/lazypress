@@ -6,7 +6,7 @@
                            [com.madgag/markdownj-core "0.4.1"]
                            [congomongo "0.1.7"]
                            [enlive "1.0.0"]
-                           [commons-codec "1.6"]]
+                           [clj-http "0.2.6"]]
             :dev-dependencies [[lein-ring "0.5.2"]]
             :ring {:handler lazypress.app/app
                    :init lazypress.app/app-init})
