@@ -1,7 +1,8 @@
 (ns lazypress.utils
   (:use [clojure.string :only [join]])
   (:use [clojure.data.json :only [json-str]])
-  (:import [com.petebevin.markdown MarkdownProcessor]))
+  (:import [com.petebevin.markdown MarkdownProcessor])
+  (:import [org.apache.commons.codec.digest DigestUtils]))
 
 (def ^{:private true} base62-seed "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 (defn base62 [n]
@@ -23,4 +24,7 @@
 (def ^{:private true} markdown-processor (MarkdownProcessor.))
 (defn md->html [text]
   (.markdown markdown-processor text))
+
+(defn md5 [text]
+  (DigestUtils/md5Hex text))
 

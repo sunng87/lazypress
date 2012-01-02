@@ -210,7 +210,7 @@ body {background-image:url('../img/bg.png'); }
 
 #wrapper {max-width:980px; margin:auto;}
 header {text-align:center;}
-header h1 {font-family: 'Lemon', cursive; font-size:3em; color:#464646; margin-bottom:5px;}
+header h1 {font-family: 'Lemon', cursive; font-size:3em; color:#464646; margin-bottom:5px; text-shadow:0 1px 2px #FFF;}
 #page-info {margin:5px;}
 #tm {font-family: 'Lemon', cursive; font-size:1em; color:#464646; margin-bottom:3px; float:right;}
 a.title-link:link, a.title-link:visited {color:#464646; text-decoration:none;}
@@ -235,7 +235,8 @@ button.bigbutton {width:8em; background-color:rgba(36,36,36,0.8); color:#FFF; bo
 button.bigbutton:hover {background-color:rgba(36,36,36,1.0);}
 footer {text-align:left; font-size:0.7em; border-top:1px #CCC solid; padding:5px; color:#333;}
 
-h2#author-name {font-size:1.8em; font-weight:bold;}
+span#author-name {font-size:1.5em; font-weight:bold; text-shadow:0 1px 0 #FFF;}
+img#avatar {vertical-align:middle;}
 li.article-item {line-height:175%;}
 a.article-link:link, a.article-link:visited {color: #333; text-decoration:none; background-color:rgba(255,255,255,0.6);padding:4px;}
 a.article-link:hover {background-color:rgba(255,255,255,0.8); color:#3D6615;}

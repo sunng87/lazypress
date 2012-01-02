@@ -1,4 +1,5 @@
 (ns lazypress.views
+  (:use [lazypress.utils])
   (:use [net.cgrand.enlive-html])
   (:use [clojure.string :only [blank?]]))
 
@@ -23,7 +24,9 @@
   [:title] (content (:title ctx) " - LazyPress")
   [:input#id] (set-attr :value (:id ctx))
   [:input#author] (set-attr :value (:author ctx))
-  [:div#author-box] (if-not (:editable ctx) (html-content "") identity))
+  [:div#author-box] (if-not (:editable ctx) (html-content "") identity)
+  [:img#avatar] (set-attr :src (str "http://gravatar.com/avatar/"
+                                    (md5 (:author ctx)) "?s=24")))
 
 (deftemplate edit "edit.html"
   [ctx]
@@ -43,7 +46,9 @@
 
 (deftemplate author "author.html"
   [ctx]
-  [:h2#author-name] (content (:author ctx))
+  [:span#author-name] (content (:author ctx))
+  [:img#avatar] (set-attr :src (str "http://gravatar.com/avatar/"
+                                    (md5 (:author ctx)) "?s=48"))
   [:ul#article-list] (content (map article-model (:pages ctx))))
 
 
