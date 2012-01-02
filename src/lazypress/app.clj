@@ -8,7 +8,9 @@
 (declare db-conn)
 
 (defn view-index [req]
-  (index {:author (-> req :session :author)}))
+  (index {:author (-> req :session :author)
+          :counter (with-mongo db-conn
+                     (fetch-count :pages))}))
 
 (defn view-post [req]
   (let [id (-> req :params :id)

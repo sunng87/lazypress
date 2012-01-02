@@ -4,7 +4,8 @@
 
 (deftemplate index "index.html"
   [ctx]
-  [:span#user] (content (:author ctx)))
+  [:span#user] (content (:author ctx))
+  [:span#counter] (content (str (:counter ctx))))
 
 (deftemplate page "page.html"
   [ctx]
