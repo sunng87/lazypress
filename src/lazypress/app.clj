@@ -72,10 +72,6 @@
         result (verify assertion)]
     (if (= "okay" (:status result))
       (do
-        (when (nil? (with-mongo db-conn
-                      (fetch-one :authors :where {:id (:email result)})))
-          (with-mongo db-conn
-            (insert! :authors {:id (:email result)})))
         (assoc
           (json-response {:result "ok" :id (:email result)})
           :session {:author (:email result)}))
