@@ -19,7 +19,7 @@
                                       (str "/a/" (:author ctx))
                                       "#")))
   [:span#pubdate] (content (.toString (:date ctx)))
-  [:span#title] (content (if-not (blank? (:title ctx))
+  [:p#page-title] (content (if-not (blank? (:title ctx))
                            (:title ctx) "untitled"))
   [:title] (content (:title ctx) " - LazyPress")
   [:input#id] (set-attr :value (:id ctx))
