@@ -118,13 +118,6 @@ lazypress.init = function( ) {
       }
     });
   }
-  if ($('user')) {
-    $('user').addEvent('click', function(){
-      if(window.confirm("Logout ?")){
-        lazypress.logout();
-      }
-    })
-  }
 
   lazypress.roar = new Roar({duration: 5000});
 };
