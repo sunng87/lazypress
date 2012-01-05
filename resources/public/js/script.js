@@ -73,7 +73,11 @@ lazypress.login = function() {
         {url: '/login',
          onSuccess: function(r,_){
            if(r.result == 'ok') {
-             $('user').set('text', r.id)
+             $('user').set('text', r.id);
+             $('login').addClass('hidden');
+             $('login').removeClass('inline');
+             $('logout').addClass('inline');
+             $('logout').removeClass('hidden');
              lazypress.roar.alert('Login success.', 'Welcome to lazypress, '+r.id);
            } else {
              lazypress.roar.alert('Login failed.', 'Do you mind to try again ?');

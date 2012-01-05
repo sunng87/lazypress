@@ -20,7 +20,8 @@
       {:status 404}
       (page (assoc page-obj
               :content (md->html (:content page-obj))
-              :editable (= (:author page-obj) (-> req :session :author)))))))
+              :editable (= (:author page-obj) (-> req :session :author))
+              :user (-> req :session :author))))))
 
 (defn- article-id [id]
   (if (blank? id)
@@ -54,7 +55,7 @@
   (let [id (-> req :params :id)
         page-obj (with-mongo db-conn
                    (fetch-one :pages :where {:id id}))]
-    (edit page-obj)))
+    (edit (assoc page-obj :user (-> req :session :author)))))
 
 (defn delete-post [req]
   (let [id (-> req :params :id)
@@ -92,7 +93,8 @@
                        :where {:author uid}
                        :only [:id :title :date]
                        :sort {:date -1}))]
-    (author {:author uid :pages pages})))
+    (author {:author uid :pages pages
+             :user (-> req :session :author)})))
 
 (defroutes lazypress-routes
   (GET "/" [] view-index)

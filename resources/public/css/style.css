@@ -210,12 +210,11 @@ body {background-image:url('../img/bg.png'); }
 
 #wrapper {max-width:980px; margin:auto;}
 header {text-align:left; background-color:rgba(35,38,32,0.6); margin:0; color:#FFF; border-radius: 0 0 15px 15px;}
-header h1 {font-family: 'Lemon', cursive; font-size:3em; color:#464646; margin:0 0 0 5px; text-shadow:0 1px 2px #000; padding:5px;}
-#page-info {margin:5px;}
+header h1 {font-family: 'Lemon', cursive; font-size:2.5em; color:#464646; margin:0 0 0 5px; text-shadow:0 1px 2px #000; padding:5px; display:inline-block;}
 #tm {font-family: 'Lemon', cursive; font-size:1em; color:#464646; margin-bottom:3px; float:right;}
 a.title-link:link, a.title-link:visited {color:#D8EDC4; text-decoration:none;}
 a.title-link:hover {color:#FFF;}
-p.slogan{font-size:0.7em; font-style:italic; margin:28px 5px; float:right;}
+p.slogan{font-size:0.7em; margin:0 15px 5px 10px; font-style:italic; display:inline-block; text-shadow:0 1px 0 #000;}
 #content-box {margin-top:10px;padding:10px;}
 #preview-box {margin:10px;padding:10px;border-radius:5px;background-color:rgba(255,255,255,0.75); font-size:1em; font-family: Helvetica, Arial, sans-serif;}
 #author-box {margin-top:10px;padding:10px; text-align:right;}
@@ -225,7 +224,7 @@ p.slogan{font-size:0.7em; font-style:italic; margin:28px 5px; float:right;}
 p#page-title {font-size:1.8em; font-weight:bold; margin:20px 0 10px 0; text-shadow:0 1px 0 #FFF;}
 span#author {font-size:1em;}
 span#pubdate {font-size:0.8em;}
-span#user {font-size:1.1em; font-weight:bold; cursor:pointer; color:#333;}
+
 
 #title {border:0; background-color:rgba(255,255,255,0.2); color:#333; font-size:1.2em; font-weight:bold;width:100%; padding:5px; margin-bottom:5px;border-radius: 5px;}
 #title:hover {background-color:rgba(255,255,255,0.5);}
@@ -242,11 +241,11 @@ a.article-link:link, a.article-link:visited {color: #333; text-decoration:none; 
 a.article-link:hover {background-color:rgba(255,255,255,0.8); color:#3D6615;}
 span.article-date {font-size:0.7em;}
 
+div#user-state {float:right; margin:25px 8px;}
+span#user {font-size:0.7em; font-weight:bold; color:#EEE;}
+a#logout:link {font-size:0.7em; color:#CCC;text-decoration:none;}
 
-
-
-
-
+.inline {display:inline; }
 
 
 
