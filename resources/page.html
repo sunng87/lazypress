@@ -48,6 +48,8 @@
         <button id="edit-button" class="bigbutton">Edit</button>
         <button id="delete-button" class="bigbutton">Delete</button>
       </div>
+      <div id="disqus_thread"></div>
+
       <footer>
         &copy; LazyPress. All rights reserved. <br/>
         LazyPress is an open source software created
@@ -65,6 +67,18 @@
     <script src="/js/script.js"></script>
     <script type="text/javascript">
       window.addEvent('domready', lazypress.init);
+    </script>
+    <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'lazypress';
+    var disqus_identifier = $('id').get('value');
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
     </script>
 
     <!-- end scripts -->

@@ -6,7 +6,7 @@
 *** DONE Author index page
 *** DONE Authentication with Browser ID
 *** TODO RSS output of author page
-*** TODO Disqus integration
+*** DONE Disqus integration
 
 ** UI
 
