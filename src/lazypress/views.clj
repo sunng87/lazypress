@@ -15,7 +15,6 @@
 (deftemplate index "index.html"
   [ctx]
   [:header] (substitute (header ctx))
-  [:span#user] (content (:author ctx))
   [:span#counter] (content (str (:counter ctx))))
 
 (deftemplate page "page.html"
