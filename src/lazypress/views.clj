@@ -14,8 +14,7 @@
 
 (deftemplate index "index.html"
   [ctx]
-  [:header] (substitute (header ctx))
-  [:span#counter] (content (str (:counter ctx))))
+  [:header] (substitute (header ctx)))
 
 (deftemplate page "page.html"
   [ctx]
