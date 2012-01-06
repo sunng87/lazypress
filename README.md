@@ -1,14 +1,15 @@
 # lazypress
 
-A website written in clojure. 
+lazypress is an optimized online writing and publishing platform,
+running on cloudfoundry, monogdb.
 
 ## Usage
 
-TODO
+lein ring server
 
 ## License
 
-Copyright (C) 2011 FIXME
+Copyright (C) 2011 Sun Ning
 
 Distributed under the Eclipse Public License, the same as Clojure.
 
