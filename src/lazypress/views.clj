@@ -21,21 +21,20 @@
   [:header] (substitute (header ctx))
   [:div#page-body] (html-content (:content ctx))
   [:a#author-display] (do->
-                          (content (if-not (blank? (:author ctx))
-                                     (:author ctx) "anonymous"))
+                          (content (if-not (nil? (:author ctx))
+                                     (:display (:author ctx)) "anonymous"))
                           (set-attr :href
-                                    (if-not (blank? (:author ctx))
-                                      (str "/a/" (:author ctx))
+                                    (if-not (nil? (:author ctx))
+                                      (str "/a/" (:display (:author ctx)))
                                       "#")))
   [:span#pubdate] (content (.toString (:date ctx)))
   [:p#page-title] (content (if-not (blank? (:title ctx))
                            (:title ctx) "untitled"))
   [:title] (content (:title ctx) " - LazyPress")
   [:input#id] (set-attr :value (:id ctx))
-  [:input#author] (set-attr :value (:author ctx))
   [:div#author-box] (if-not (:editable ctx) (html-content "") identity)
   [:img#avatar] (set-attr :src (str "http://gravatar.com/avatar/"
-                                    (md5 (:author ctx)) "?s=24")))
+                                    (md5 (:email (:author ctx))) "?s=24")))
 
 (deftemplate edit "edit.html"
   [ctx]
@@ -57,11 +56,11 @@
 (deftemplate author "author.html"
   [ctx]
   [:header] (substitute (header ctx))
-  [:span#author-name] (content (:author ctx))
+  [:span#author-name] (content (:display (:author ctx)))
   [:img#avatar] (set-attr :src (str "http://gravatar.com/avatar/"
-                                    (md5 (:author ctx)) "?s=48"))
+                                    (md5 (:email (:author ctx))) "?s=48"))
   [:ul#article-list] (content (map article-model (:pages ctx)))
-  [:link#rss-link] (set-attr :href (str "/a/" (:author ctx) "/feed"))
-  [:a#rss-link] (set-attr :href (str "/a/" (:author ctx) "/feed")))
+  [:link#rss-link] (set-attr :href (str "/a/" (:display (:author ctx)) "/feed"))
+  [:a#rss-link] (set-attr :href (str "/a/" (:display (:author ctx)) "/feed")))
 
 

@@ -88,6 +88,8 @@ lazypress.login = function() {
              if ($('title')) {
                lazypress.try_recovery();
              }
+           } else if (r.result == 'id-required') {
+               lazypress.ask_for_id(false);
            } else {
              lazypress.roar.alert('Login failed.', 'Do you mind to try again ?');
            }
@@ -164,9 +166,36 @@ lazypress.start_backup = function() {
     }
   };
   if (localStorage){
-    lazypress._backup_thread = backup_function.periodical(10000);      
+    lazypress._backup_thread = backup_function.periodical(15000);
   }
 
+};
+
+lazypress.ask_for_id = function(alt_msg) {
+  var msg = alt_msg || "Welcome to LazyPress! <br/>Get yourself a unique ID: [A-Za-z0-9_]";
+  new MooDialog.Prompt(msg, function(ret){
+    if (!ret.test('^[A-Za-z0-9_]+$')) {
+      lazypress.ask_for_id("Invalid characters found in your ID.<br/> Only [A-Za-z0-9_] are allowed:");
+      return ;
+    }
+    var req = new Request.JSON({
+      url: "/save-id",
+      onSuccess: function (r, _) {
+        if (r.result == "ok") {
+          $('user').set('text', r.id);
+          $('login').addClass('hidden');
+          $('login').removeClass('inline');
+          $('logout').addClass('inline');
+          $('logout').removeClass('hidden');
+          lazypress.roar.alert('Login success.', 
+                               'Welcome to lazypress, '+r.id);
+        } else {
+          lazypress.ask_for_id("Sorry, the ID you gave us is captured.<br/> Find a new ID: [A-Za-z0-9_]");
+        }
+      }
+    });
+    req.post({'uid':ret});
+  }, {'closeButton': false, 'useEscKey': false});
 };
 
 

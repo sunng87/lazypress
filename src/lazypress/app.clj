@@ -16,12 +16,16 @@
 (defn view-post [req]
   (let [id (-> req :params :id)
         page-obj (with-mongo db-conn
-                   (fetch-one :pages :where {:id id}))]
+                   (fetch-one :pages :where {:id id}))
+        author-obj (with-mongo db-conn
+                     (fetch-one :authors
+                                :where {:uid (:author page-obj)}))]
     (if (nil? page-obj)
       {:status 404}
       (page (assoc page-obj
               :content (md->html (:content page-obj))
-              :editable (= (:author page-obj) (-> req :session :author))
+              :editable (= (:uid author-obj) (-> req :session :author))
+              :author author-obj
               :user (-> req :session :author))))))
 
 (defn- article-id [id]
@@ -76,29 +80,33 @@
         result (verify assertion)]
     (if (= "okay" (:status result))
       (do
-        (assoc
-          (json-response {:result "ok" :id (:email result)})
-          :session {:author (:email result)}))
+        (if-let [author (with-mongo db-conn
+                       (fetch-one :authors :where {:email (:email result)}))]
+          (assoc (json-response {:result "ok" :id (:display author)})
+            :session {:email (:email result) :author (:uid author)})
+          (assoc (json-response {:result "id-required"})
+            :session {:email (:email result)})))
       (do
         (json-response {:result "failed"})))))
 
 (defn logout [req]
-  (assoc
-      (json-response {:result "ok"})
-    :session {:author nil}))
+  (assoc (json-response {:result "ok"})
+    :session {}))
 
 (defn view-author [req]
-  (let [uid (-> req :params :id)
+  (let [uid (lower-case (-> req :params :id))
+        author-obj (with-mongo db-conn
+                 (fetch-one :authors :where {:uid uid}))
         pages (with-mongo db-conn
                 (fetch :pages
                        :where {:author uid}
                        :only [:id :title :date]
                        :sort {:date -1}))]
-    (author {:author uid :pages pages
+    (author {:author author-obj :pages pages
              :user (-> req :session :author)})))
 
 (defn view-author-atom [req]
-  (let [uid (-> req :params :id)
+  (let [uid (lower-case (-> req :params :id))
         pages (with-mongo db-conn
                 (fetch :pages
                        :where {:author uid}
@@ -122,6 +130,22 @@
                                    (.setValue (md->html (:content %))))))
                            pages))))))
 
+(defn save-id [req]
+  (if-let [author-email (-> req :session :email)]
+    (let [uid (-> req :params :uid)
+          normalized-uid (lower-case uid)]
+      (if (nil? (with-mongo db-conn
+                  (fetch-one :authors :where {:uid normalized-uid})))
+        (do
+          (with-mongo db-conn
+            (insert! :authors {:email author-email
+                               :uid normalized-uid
+                               :display uid}))
+          (assoc (json-response {:result "ok" :id uid})
+            :session {:email author-email :author normalized-uid}))
+        (json-response {:result "retry"})))
+    {:status 403}))
+
 (defroutes lazypress-routes
   (GET "/" [] view-index)
   (GET "/p/:id" [] view-post)
@@ -133,6 +157,7 @@
   (POST "/logout" [] logout)
   (POST "/save" [] save-post)
   (POST "/preview" [] preview-post)
+  (POST "/save-id" [] save-id)
   (resources "/"))
 
 (defn app-init []
