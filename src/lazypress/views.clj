@@ -34,7 +34,9 @@
   [:input#id] (set-attr :value (:id ctx))
   [:div#author-box] (if-not (:editable ctx) (html-content "") identity)
   [:img#avatar] (set-attr :src (str "http://gravatar.com/avatar/"
-                                    (md5 (:email (:author ctx))) "?s=24")))
+                                    (if-not (nil? (:author ctx))
+                                      (md5 (:email (:author ctx)))
+                                      "anonymouse") "?s=24")))
 
 (deftemplate edit "edit.html"
   [ctx]

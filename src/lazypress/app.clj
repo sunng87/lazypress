@@ -24,7 +24,9 @@
       {:status 404}
       (page (assoc page-obj
               :content (md->html (:content page-obj))
-              :editable (= (:uid author-obj) (-> req :session :author))
+              :editable (not (or (nil? author-obj)
+                                 (= (:uid author-obj)
+                                    (-> req :session :author))))
               :author author-obj
               :user (-> req :session :author))))))
 
