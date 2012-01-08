@@ -7,10 +7,16 @@ lazypress.publish = function() {
   if ($('id')) {
     data['id'] = $('id').get('value');
   }
+
   var req = new Request.JSON(
     {url: "/save", 
      onSuccess: function(r,_){
        if (r.result == 'ok'){
+         if (lazypress._backup_thread) {
+           clearInterval(lazypress._backup_thread);
+           delete localStorage.lparticle;
+         }
+         window.onbeforeunload = null;
          var id = r.id;
          window.location = "/p/"+id;
        } else {
@@ -56,7 +62,7 @@ lazypress.delete = function() {
      onSuccess: function(r,_) {
        if(r.result == 'ok'){
          lazypress.roar.alert('Article Deleted',
-                             'This article has been deleted permanently.')
+                             'This article has been deleted permanently.');
          $('delete-button').set('text', 'Deleted');
        } else {
          lazypress.roar.alert('Unknown error.', 'Article not removed.');
@@ -79,6 +85,9 @@ lazypress.login = function() {
              $('logout').addClass('inline');
              $('logout').removeClass('hidden');
              lazypress.roar.alert('Login success.', 'Welcome to lazypress, '+r.id);
+             if ($('title')) {
+               lazypress.try_recovery();
+             }
            } else {
              lazypress.roar.alert('Login failed.', 'Do you mind to try again ?');
            }
@@ -121,4 +130,43 @@ lazypress.init = function( ) {
 
   lazypress.roar = new Roar({duration: 5000});
 };
+
+lazypress.try_recovery = function() {
+  if (localStorage) {
+    if (localStorage.lparticle) {
+      var article = JSON.parse(localStorage.lparticle);
+      var author = article.author;
+      if (author == $('user').get('text') &&
+          confirm('Unpublished article detected, restore it ?')) {
+        $('title').set('value', article.title);
+        $('content').set('value',article.content);
+      } else {
+        delete localStorage.lparticle;
+      }
+    }
+  }
+};
+
+lazypress.start_backup = function() {
+  var backup_function = function() {
+    var author = $('user').get('text');
+    if (author.length>0){
+      var title = $('title').get('value');
+      var content = $('content').get('value');
+        
+      if (title.length >0 || content.length>0) {
+        var article = {title: title, 
+                       content: content,
+                       author: author};
+        localStorage.lparticle = JSON.stringify(article);
+      }
+      
+    }
+  };
+  if (localStorage){
+    lazypress._backup_thread = backup_function.periodical(10000);      
+  }
+
+};
+
 

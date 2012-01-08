@@ -63,6 +63,16 @@
     <script src="/js/script.js"></script>
     <script type="text/javascript">
       window.addEvent('domready', lazypress.init);
+      window.addEvent('domready', lazypress.try_recovery);
+      window.addEvent('domready', lazypress.start_backup);
+      window.onbeforeunload = function(){
+        if($('title').get('value').length > 0 ||
+           $('content').get('value').length > 0) {
+          return "Are you sure to discard your edit ?";
+        } else {
+          return null;
+        }
+      }
     </script>
     <!-- end scripts -->
 
