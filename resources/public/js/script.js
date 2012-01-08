@@ -80,6 +80,7 @@ lazypress.login = function() {
          onSuccess: function(r,_){
            if(r.result == 'ok') {
              $('user').set('text', r.id);
+             $('user').set('href', "/a/"+r.id);
              $('login').addClass('hidden');
              $('login').removeClass('inline');
              $('logout').addClass('inline');
@@ -183,6 +184,7 @@ lazypress.ask_for_id = function(alt_msg) {
       onSuccess: function (r, _) {
         if (r.result == "ok") {
           $('user').set('text', r.id);
+          $('user').set('href', "/a/"+r.id);
           $('login').addClass('hidden');
           $('login').removeClass('inline');
           $('logout').addClass('inline');

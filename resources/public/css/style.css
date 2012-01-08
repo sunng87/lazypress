@@ -242,8 +242,9 @@ a.article-link:hover {background-color:rgba(255,255,255,0.8); color:#3D6615;}
 span.article-date {font-size:0.7em;}
 
 div#user-state {float:right; margin:25px 8px;}
-span#user {font-size:0.7em; font-weight:bold; color:#EEE;}
-a#logout:link {font-size:0.7em; color:#CCC;text-decoration:none;}
+a#user:link, a#user:visited {font-size:1em;font-weight:bold;color:#D8EDC4;text-decoration:none; text-shadow:0 1px 1px #000;}
+a#user:hover {color:#FFF;}
+a#logout:link {font-size:1em; color:#CCC;text-decoration:none;}
 
 .inline {display:inline; }
 

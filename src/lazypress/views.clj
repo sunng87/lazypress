@@ -6,7 +6,9 @@
 (defsnippet header "header.html"
   [:header]
   [ctx]
-  [:span#user] (content (:user ctx))
+  [:a#user] (do->
+             (content (:user ctx))
+             (set-attr :href (str "/a/" (:user ctx))))
   [:a#login] (set-attr :class
                        (if (nil? (:user ctx)) "inline" "hidden"))
   [:a#logout] (set-attr :class

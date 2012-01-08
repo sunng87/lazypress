@@ -11,7 +11,7 @@
 (declare db-conn)
 
 (defn view-index [req]
-  (index {:user (-> req :session :author)}))
+  (index {:user (-> req :session :author-display)}))
 
 (defn view-post [req]
   (let [id (-> req :params :id)
@@ -28,7 +28,7 @@
                                  (= (:uid author-obj)
                                     (-> req :session :author))))
               :author author-obj
-              :user (-> req :session :author))))))
+              :user (-> req :session :author-display))))))
 
 (defn- article-id [id]
   (if (blank? id)
@@ -62,7 +62,7 @@
   (let [id (-> req :params :id)
         page-obj (with-mongo db-conn
                    (fetch-one :pages :where {:id id}))]
-    (edit (assoc page-obj :user (-> req :session :author)))))
+    (edit (assoc page-obj :user (-> req :session :author-display)))))
 
 (defn delete-post [req]
   (let [id (-> req :params :id)
@@ -85,7 +85,9 @@
         (if-let [author (with-mongo db-conn
                        (fetch-one :authors :where {:email (:email result)}))]
           (assoc (json-response {:result "ok" :id (:display author)})
-            :session {:email (:email result) :author (:uid author)})
+            :session {:email (:email result)
+                      :author (:uid author)
+                      :author-display (:display author)})
           (assoc (json-response {:result "id-required"})
             :session {:email (:email result)})))
       (do
@@ -105,7 +107,7 @@
                        :only [:id :title :date]
                        :sort {:date -1}))]
     (author {:author author-obj :pages pages
-             :user (-> req :session :author)})))
+             :user (-> req :session :author-display)})))
 
 (defn view-author-atom [req]
   (let [uid (lower-case (-> req :params :id))
@@ -144,7 +146,9 @@
                                :uid normalized-uid
                                :display uid}))
           (assoc (json-response {:result "ok" :id uid})
-            :session {:email author-email :author normalized-uid}))
+            :session {:email author-email
+                      :author normalized-uid
+                      :author-display uid}))
         (json-response {:result "retry"})))
     {:status 403}))
 
