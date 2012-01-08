@@ -5,7 +5,7 @@
 *** TODO Remove counter update on app-init, need a better solution
 *** DONE Author index page
 *** DONE Authentication with Browser ID
-*** TODO RSS output of author page
+*** DONE RSS output of author page
 *** DONE Disqus integration
 
 ** UI
