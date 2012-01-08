@@ -3,8 +3,11 @@
   (:use [compojure core route handler])
   (:use [somnium.congomongo])
   (:use [clojure.string :only [blank? lower-case]])
-  (:import [java.util Date]))
+  (:import [java.util Date])
+  (:import [com.sun.syndication.feed.rss Channel Item Content])
+  (:import [com.sun.syndication.io WireFeedOutput]))
 
+(def web-root "http://lazypress.cloudfoundry.com/")
 (declare db-conn)
 
 (defn view-index [req]
@@ -94,10 +97,36 @@
     (author {:author uid :pages pages
              :user (-> req :session :author)})))
 
+(defn view-author-atom [req]
+  (let [uid (-> req :params :id)
+        pages (with-mongo db-conn
+                (fetch :pages
+                       :where {:author uid}
+                       :sort {:date -1}
+                       :limit 20))]
+    (.outputString (WireFeedOutput.)
+                   (doto (Channel. "rss_2.0")
+                     (.setLink (str web-root "a/" uid))
+                     (.setLastBuildDate (:date (first pages)))
+                     (.setTitle (str "LazyPress: " uid))
+                     (.setDescription (str uid " on LazyPress"))
+                     (.setItems
+                      (map #(doto (Item.)
+                              (.setPubDate (:date %))
+                              (.setTitle (:title %))
+                              (.setLink (str web-root "p/" (:id %)))
+                              
+                              (.setContent
+                                (doto (Content.)
+                                   (.setType Content/HTML)
+                                   (.setValue (md->html (:content %))))))
+                           pages))))))
+
 (defroutes lazypress-routes
   (GET "/" [] view-index)
   (GET "/p/:id" [] view-post)
   (GET "/a/:id" [] view-author)
+  (GET "/a/:id/feed" [] view-author-atom)
   (GET "/e/:id" [] edit-post)
   (POST "/d/:id" [] delete-post)
   (POST "/login" [] login)
