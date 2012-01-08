@@ -60,6 +60,8 @@
   [:span#author-name] (content (:author ctx))
   [:img#avatar] (set-attr :src (str "http://gravatar.com/avatar/"
                                     (md5 (:author ctx)) "?s=48"))
-  [:ul#article-list] (content (map article-model (:pages ctx))))
+  [:ul#article-list] (content (map article-model (:pages ctx)))
+  [:link#rss-link] (set-attr :href (str "/a/" (:author ctx) "/feed"))
+  [:a#rss-link] (set-attr :href (str "/a/" (:author ctx) "/feed")))
 
 
