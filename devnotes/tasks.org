@@ -2,7 +2,7 @@
 
 ** Application
 
-*** TODO Remove counter update on app-init, need a better solution
+*** DONE Remove counter update on app-init, need a better solution
 *** DONE Author index page
 *** DONE Authentication with Browser ID
 *** DONE RSS output of author page

@@ -146,9 +146,12 @@
     (authenticate db-conn
                   (mongo-config "username")
                   (mongo-config "password")))
-  (with-mongo db-conn
-    (update! :counter {:name "post-key"}
-             {:$inc {:counter 1}} :upsert? true)))
+  ;; create counter if not exists
+  (when (nil? (with-mongo db-conn
+                (fetch-one :counter :where {:name "post-key"})))
+    (with-mongo db-conn
+      (update! :counter {:name "post-key"}
+               {:$inc {:counter 1}} :upsert? true))))
 
 (def app
   (site lazypress-routes))
