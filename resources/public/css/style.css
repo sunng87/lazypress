@@ -237,7 +237,7 @@ footer {text-align:left; font-size:0.7em; border-top:1px #CCC solid; padding:5px
 
 span#author-name {font-size:1.5em; font-weight:bold; text-shadow:0 1px 0 #FFF;}
 img#avatar {vertical-align:middle;}
-li.article-item {line-height:175%;}
+li.article-item {line-height:225%;}
 a.article-link:link, a.article-link:visited {color: #333; text-decoration:none; background-color:rgba(255,255,255,0.6);padding:3px;}
 a.article-link:hover {background-color:rgba(255,255,255,0.8); color:#3D6615;}
 span.article-date {font-size:0.7em;}
