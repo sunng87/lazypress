@@ -33,9 +33,9 @@ lazypress.preview = function() {
   var req = new Request.HTML(
     {url: "/preview",
      onSuccess: function(_,_,r,_){
-       $('preview-box').set('html', r);
+       $('page-body').set('html', r);
        $('content-box').toggleClass('hidden');
-       $('preview-box').toggleClass('hidden');
+       $('page-body').toggleClass('hidden');
        $('preview-button').set('text', 'Edit');
        $('preview-button').addEvent('click', lazypress.edit);
      }});
@@ -43,7 +43,7 @@ lazypress.preview = function() {
 };
 
 lazypress.edit = function(e) {
-  $('preview-box').toggleClass('hidden');
+  $('page-body').toggleClass('hidden');
   $('content-box').toggleClass('hidden');
   $('preview-button').set('text', 'Preview');
   $('preview-button').removeEvents(['click']);

@@ -219,7 +219,7 @@ p.slogan{font-size:0.7em; margin:0 15px 5px 10px; font-style:italic; display:inl
 #preview-box {margin:10px;padding:10px;border-radius:5px;background-color:rgba(255,255,255,0.75); font-size:1em; font-family: Arvo, sans-serif;}
 #author-box {margin-top:10px;padding:10px; text-align:right;}
 
-#page-body {background-color:rgba(255,255,255,0.25); font-size:1em; padding:10px;margin:10px; font-family: Arvo, sans-serif; border-radius:8px;}
+#page-body {background-color:rgba(255,255,255,0.25); font-size:1em; padding:10px;margin:10px; font-family: Arvo, sans-serif; border-radius:8px; overflow:hidden;}
 #page-body pre{font-family: monospaced;}
 #page-info {font-size:0.8em; text-align:left;}
 p#page-title {font-size:1.8em; font-weight:bold; margin:20px 0 10px 0; text-shadow:0 1px 0 #FFF;}
@@ -250,6 +250,8 @@ a#logout:link {font-size:1em; color:#CCC;text-decoration:none;}
 .inline {display:inline; }
 
 
+#page-body table {width:95%;}
+#page-body table td, #page-body table th {border-collapse:collapse; border:1px #333 solid; padding:2px;}
 
 /* ==|== media queries ======================================================
 PLACEHOLDER Media Queries for Responsive Design.
