@@ -11,7 +11,7 @@
 (declare db-conn)
 
 (defn view-index [req]
-  (index {:user (-> req :session :author-display)}))
+  (render index req))
 
 (defn view-post [req]
   (let [id (-> req :params :id)
@@ -22,13 +22,13 @@
                                 :where {:uid (:author page-obj)}))]
     (if (nil? page-obj)
       {:status 404}
-      (page (assoc page-obj
-              :content (md->html (:content page-obj))
-              :editable (and (not (nil? author-obj))
-                             (= (:uid author-obj)
-                                (-> req :session :author)))
-              :author author-obj
-              :user (-> req :session :author-display))))))
+      (render page
+              req (assoc page-obj
+                    :content (md->html (:content page-obj))
+                    :editable (and (not (nil? author-obj))
+                                   (= (:uid author-obj)
+                                      (-> req :session :author)))
+                    :author author-obj)))))
 
 (defn- article-id [id]
   (if (blank? id)
@@ -62,7 +62,7 @@
   (let [id (-> req :params :id)
         page-obj (with-mongo db-conn
                    (fetch-one :pages :where {:id id}))]
-    (edit (assoc page-obj :user (-> req :session :author-display)))))
+    (render edit req page-obj)))
 
 (defn delete-post [req]
   (let [id (-> req :params :id)
@@ -106,8 +106,7 @@
                        :where {:author uid}
                        :only [:id :title :date]
                        :sort {:date -1}))]
-    (author {:author author-obj :pages pages
-             :user (-> req :session :author-display)})))
+    (render author req {:author author-obj :pages pages})))
 
 (defn view-author-atom [req]
   (let [uid (lower-case (-> req :params :id))
@@ -116,7 +115,8 @@
                        :where {:author uid}
                        :sort {:date -1}
                        :limit 20))]
-    (.outputString (WireFeedOutput.)
+    {:headers {:content-type "application/xml+rss"}
+     :body (.outputString (WireFeedOutput.)
                    (doto (Channel. "rss_2.0")
                      (.setLink (str web-root "a/" uid))
                      (.setLastBuildDate (:date (first pages)))
@@ -132,7 +132,7 @@
                                 (doto (Content.)
                                    (.setType Content/HTML)
                                    (.setValue (md->html (:content %))))))
-                           pages))))))
+                           pages))))}))
 
 (defn save-id [req]
   (if-let [author-email (-> req :session :email)]

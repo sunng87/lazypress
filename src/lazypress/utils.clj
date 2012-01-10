@@ -28,4 +28,9 @@
 (defn md5 [text]
   (DigestUtils/md5Hex text))
 
+(defn render
+  "render to view"
+  [view-func req & ctx]
+  (view-func (apply merge req ctx)))
+
 

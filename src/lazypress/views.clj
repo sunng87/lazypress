@@ -7,12 +7,12 @@
   [:header]
   [ctx]
   [:a#user] (do->
-             (content (:user ctx))
-             (set-attr :href (str "/a/" (:user ctx))))
+             (content (-> ctx :session :author-display))
+             (set-attr :href (str "/a/" (-> ctx :session :author-display))))
   [:a#login] (set-attr :class
-                       (if (nil? (:user ctx)) "inline" "hidden"))
+                       (if (nil? (-> ctx :session :author-display)) "inline" "hidden"))
   [:a#logout] (set-attr :class
-                        (if-not (nil? (:user ctx)) "inline" "hidden")))
+                        (if-not (nil? (-> ctx :session :author-display)) "inline" "hidden")))
 
 (deftemplate index "index.html"
   [ctx]
