@@ -115,24 +115,24 @@
                        :where {:author uid}
                        :sort {:date -1}
                        :limit 20))]
-    {:headers {:content-type "application/xml+rss"}
+    {:headers {"Content-Type" "application/rss+xml; charset=utf-8"}
      :body (.outputString (WireFeedOutput.)
-                   (doto (Channel. "rss_2.0")
-                     (.setLink (str web-root "a/" uid))
-                     (.setLastBuildDate (:date (first pages)))
-                     (.setTitle (str "LazyPress: " uid))
-                     (.setDescription (str uid " on LazyPress"))
-                     (.setItems
-                      (map #(doto (Item.)
-                              (.setPubDate (:date %))
-                              (.setTitle (:title %))
-                              (.setLink (str web-root "p/" (:id %)))
-                              
-                              (.setContent
-                                (doto (Content.)
-                                   (.setType Content/HTML)
-                                   (.setValue (md->html (:content %))))))
-                           pages))))}))
+                          (doto (Channel. "rss_2.0")
+                            (.setLink (str web-root "a/" uid))
+                            (.setLastBuildDate (:date (first pages)))
+                            (.setTitle (str "LazyPress: " uid))
+                            (.setDescription (str uid " on LazyPress"))
+                            (.setItems
+                             (map #(doto (Item.)
+                                     (.setPubDate (:date %))
+                                     (.setTitle (:title %))
+                                     (.setLink (str web-root "p/" (:id %)))
+                                     
+                                     (.setContent
+                                      (doto (Content.)
+                                        (.setType Content/HTML)
+                                 (.setValue (md->html (:content %))))))
+                                  pages))))}))
 
 (defn save-id [req]
   (if-let [author-email (-> req :session :email)]
