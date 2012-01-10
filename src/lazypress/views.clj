@@ -67,4 +67,7 @@
   [:link#rss-link] (set-attr :href (str "/a/" (:display (:author ctx)) "/feed"))
   [:a#rss-link] (set-attr :href (str "/a/" (:display (:author ctx)) "/feed")))
 
+(deftemplate page-404 "404.html"
+  [ctx]
+  [:header] (substitute (header ctx)))
 

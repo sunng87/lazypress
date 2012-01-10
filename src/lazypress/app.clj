@@ -21,7 +21,7 @@
                      (fetch-one :authors
                                 :where {:uid (:author page-obj)}))]
     (if (nil? page-obj)
-      {:status 404}
+      (not-found (render page-404 req))
       (render page
               req (assoc page-obj
                     :content (md->html (:content page-obj))
@@ -106,7 +106,9 @@
                        :where {:author uid}
                        :only [:id :title :date]
                        :sort {:date -1}))]
-    (render author req {:author author-obj :pages pages})))
+    (if-not (nil? author-obj)
+      (render author req {:author author-obj :pages pages})
+      (not-found (render page-404 req)))))
 
 (defn view-author-atom [req]
   (let [uid (lower-case (-> req :params :id))

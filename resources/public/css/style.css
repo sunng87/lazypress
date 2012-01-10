@@ -253,6 +253,8 @@ a#logout:link {font-size:1em; color:#CCC;text-decoration:none;}
 #page-body table {width:95%;}
 #page-body table td, #page-body table th {border-collapse:collapse; border:1px #333 solid; padding:2px;}
 
+#not-found-view {font-size:8em; text-shadow:2px 5px 0 #FFF; color: #333; font-weight:bold; text-align:center; padding:5px; margin:20px;}
+
 /* ==|== media queries ======================================================
 PLACEHOLDER Media Queries for Responsive Design.
 These override the primary ('mobile first') styles
