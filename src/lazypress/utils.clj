@@ -11,8 +11,8 @@
       (join "" (conj r (nth base62-seed x)))
       (recur (long (/ x 62)) (conj r (nth base62-seed (mod x 62)))))))
 
-(defn json-response
-  ([d] (json-response d nil))
+(defn render-json
+  ([d] (render-json d nil))
   ([d c]
      {:headers
       {"Content-Type" (if (nil? c)

@@ -48,11 +48,11 @@
     (if (blank? rid)
       (do
         (with-mongo db-conn (insert! :pages page))
-        (json-response {:result "ok" :id id} nil))
+        (render-json {:result "ok" :id id} nil))
       (do        
         (with-mongo db-conn
           (update! :pages {:id rid :author session-author} page))
-        (json-response {:result "ok" :id rid})))))
+        (render-json {:result "ok" :id rid})))))
 
 (defn preview-post [req]
   (let [content (-> req :params :content)]
@@ -73,9 +73,9 @@
       (do
         (with-mongo db-conn
           (destroy! :pages page-obj))
-        (json-response {:result "ok"}))
+        (render-json {:result "ok"}))
       (do
-        (json-response {:result "failed"})))))
+        (render-json {:result "failed"})))))
 
 (defn login [req]
   (let [assertion (-> req :params :assertion)
@@ -84,17 +84,17 @@
       (do
         (if-let [author (with-mongo db-conn
                        (fetch-one :authors :where {:email (:email result)}))]
-          (assoc (json-response {:result "ok" :id (:display author)})
+          (assoc (render-json {:result "ok" :id (:display author)})
             :session {:email (:email result)
                       :author (:uid author)
                       :author-display (:display author)})
-          (assoc (json-response {:result "id-required"})
+          (assoc (render-json {:result "id-required"})
             :session {:email (:email result)})))
       (do
-        (json-response {:result "failed"})))))
+        (render-json {:result "failed"})))))
 
 (defn logout [req]
-  (assoc (json-response {:result "ok"})
+  (assoc (render-json {:result "ok"})
     :session {}))
 
 (defn view-author [req]
@@ -145,11 +145,11 @@
             (insert! :authors {:email author-email
                                :uid normalized-uid
                                :display uid}))
-          (assoc (json-response {:result "ok" :id uid})
+          (assoc (render-json {:result "ok" :id uid})
             :session {:email author-email
                       :author normalized-uid
                       :author-display uid}))
-        (json-response {:result "retry"})))
+        (render-json {:result "retry"})))
     {:status 403}))
 
 (defroutes lazypress-routes
